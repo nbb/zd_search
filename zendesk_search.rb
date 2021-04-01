@@ -62,8 +62,9 @@ def display_help
 end
 
 def display_fields
-  @data.keys.each do |key|
-    puts key
+  @data.keys.each do |entity_name|
+    puts "\n#{entity_name.capitalize}:"
+    puts "\n  #{@data[entity_name].first.keys.join(", ")}"
   end
 end
 
@@ -99,6 +100,7 @@ def input_loop
     puts "\nWhich entity would you like to search?"
     puts "\nSelect a number:\n"
     entity_options.each_with_index { |option, i| puts "#{i+1}) #{option.capitalize}" }
+
     @entity = get_input(blank_allowed: false)
     puts "\nSearching #{entity_options[@entity.to_i - 1]}..." if @entity
     input_loop
