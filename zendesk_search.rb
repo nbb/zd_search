@@ -100,7 +100,7 @@ def input_loop
     puts "\nSelect a number:\n"
     entity_options.each_with_index { |option, i| puts "#{i+1}) #{option.capitalize}" }
     @entity = get_input(blank_allowed: false)
-    puts "\nSearching #{entity_options[@entity.to_i]}..." if @entity
+    puts "\nSearching #{entity_options[@entity.to_i - 1]}..." if @entity
     input_loop
   end
 
