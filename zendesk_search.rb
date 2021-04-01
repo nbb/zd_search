@@ -69,19 +69,22 @@ end
 
 def get_input(blank_allowed: false)
   input = gets.chomp
-  if input == "\\exit"
+  if input == "" && !blank_allowed
+    puts "! You must enter a value here !"
+    return nil
+  end
+
+  case input
+  when "\\exit"
     exit
-  elsif input == "\\help"
+  when "\\help"
     display_help
     nil
-  elsif input == "\\fields"
+  when "\\fields"
     display_fields
     nil
-  elsif input == "\\restart"
+  when "\\restart"
     @entity, @field, @search_term = nil
-  elsif !blank_allowed && input == ""
-    puts "! You must enter a value here !"
-    nil
   else
     input
   end
