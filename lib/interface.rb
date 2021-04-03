@@ -23,8 +23,9 @@ class Interface
       puts "\nSelect a number:\n"
       entity_options.each_with_index { |option, i| puts "#{i+1}) #{option.capitalize}" }
 
-      @entity = get_input(blank_allowed: false)
-      puts "\nSearching #{entity_options[@entity.to_i - 1]}..." if @entity
+      entity_id = get_input(blank_allowed: false)
+      @entity = entity_options[entity_id.to_i - 1]
+      puts "\nSearching #{@entity}..."
       input_loop
     end
 
