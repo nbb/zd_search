@@ -42,6 +42,6 @@ class BuildIndex
       end
     end
 
-    return @data
+    return inverted_index
   end
 end

@@ -27,5 +27,5 @@ end
 build_index = BuildIndex.new(data)
 indexed_data = build_index.call
 
-interface = Interface.new(indexed_data)
+interface = Interface.new(data, indexed_data)
 interface.call

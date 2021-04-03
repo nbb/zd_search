@@ -1,6 +1,7 @@
 class Interface
-  def initialize(data)
+  def initialize(data, search_index)
     @data = data
+    @search_index = search_index
     @entity, @field, @search_term = nil
   end
 
