@@ -1,3 +1,5 @@
+require_relative "searcher"
+
 class Interface
   def initialize(data, search_index)
     @data = data
@@ -38,6 +40,8 @@ class Interface
     if !@search_term
       puts "\nEnter your search term:\n"
       @search_term = get_input(blank_allowed: true)
+      searcher = Searcher.new(@search_index, @data, @entity, @field, @search_term)
+      searcher.call
       input_loop
     end
   end
