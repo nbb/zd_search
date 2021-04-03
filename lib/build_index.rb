@@ -33,11 +33,10 @@ class BuildIndex
 
     # Build out our inverted index here
     # I think this needs to be recursive and follow the structure of the data input
-    @data.keys.each do |key|
-      @data[key].each_with_index do |item, i|
-        # byebug
-        inverted_index[key.to_sym].keys.each do |index_key|
-          inverted_index[key.to_sym][index_key][item[index_key.to_s]] = i
+    @data.each do |entity_name, fields|
+      fields.each_with_index do |field, i|
+        inverted_index[entity_name.to_sym].keys.each do |index_key|
+          inverted_index[entity_name.to_sym][index_key][field[index_key.to_s]] = i
         end
       end
     end
