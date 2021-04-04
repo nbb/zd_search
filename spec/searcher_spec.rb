@@ -12,11 +12,11 @@ describe Searcher do
   }
 
   let(:search_index) {
-    { users: {
-        name: {
+    { "users" => {
+        "name" => {
           "francisca rasmussen" => [0]
         },
-        timezone: {
+        "timezone" => {
           "sri lanka" => [0, 1]
         }
       }
