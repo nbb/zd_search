@@ -32,11 +32,11 @@ class BuildIndex
   def call
     # Build out our inverted index here
     # TODO: I think this needs to be recursive and follow the structure of the data input
-    @data.each do |entity_name, fields|
-      fields.each_with_index do |field, field_index|
-        @inverted_index[entity_name].keys.each do |index_key|
-          value = field[index_key]
-          add_value_to_index(field_index, entity_name, index_key, value)
+    @data.each do |entity_name, records|
+      records.each_with_index do |record, record_index|
+        @inverted_index[entity_name].keys.each do |field|
+          value = record[field]
+          add_value_to_index(record_index, entity_name, field, value)
         end
       end
     end
@@ -44,16 +44,16 @@ class BuildIndex
     return @inverted_index
   end
 
-  def add_value_to_index(field_index, entity_name, index_key, value)
+  def add_value_to_index(field_index, entity_name, field, value)
     if value.is_a?(Array)
-      value.map { |sub_value| add_value_to_index(field_index, entity_name, index_key, sub_value) }
+      value.map { |sub_value| add_value_to_index(field_index, entity_name, field, sub_value) }
     end
     value = value.to_s.downcase # convert integers and booleans to strings at this point, and downcase
     value_array = value.split(" ")
     value_array = value_array << value if value_array.length > 1 # we add the whole value to the index as well as the split value (so you can search e.g. a full name as well as name component)
     value_array.map do |value_component|
-      @inverted_index[entity_name][index_key][value_component] ||= []
-      @inverted_index[entity_name][index_key][value_component] << field_index
+      @inverted_index[entity_name][field][value_component] ||= []
+      @inverted_index[entity_name][field][value_component] << field_index
     end
   end
 end
