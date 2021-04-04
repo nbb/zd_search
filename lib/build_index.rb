@@ -36,7 +36,9 @@ class BuildIndex
     @data.each do |entity_name, fields|
       fields.each_with_index do |field, i|
         inverted_index[entity_name.to_sym].keys.each do |index_key|
-          inverted_index[entity_name.to_sym][index_key][field[index_key.to_s].to_s.downcase] = i
+          value = field[index_key.to_s].to_s.downcase
+          inverted_index[entity_name.to_sym][index_key][value] ||= []
+          inverted_index[entity_name.to_sym][index_key][value] << i
         end
       end
     end

@@ -8,7 +8,7 @@ class Searcher
   end
 
   def call
-    index = @search_index[@entity.to_sym][@field.to_sym][@search_term.downcase]
-    @data[@entity][index]
+    location_indexes = @search_index[@entity.to_sym][@field.to_sym][@search_term.downcase]
+    location_indexes.map { |location_index| @data[@entity][location_index] }
   end
 end
