@@ -35,9 +35,11 @@ class BuildIndex
     if value.is_a?(Array)
       value.map { |sub_value| add_value_to_index(record_index, entity_name, field, sub_value) }
     end
-    value = value.to_s.downcase # convert integers and booleans to strings at this point, and downcase
+    # convert integers and booleans to strings at this point, and downcase
+    value = value.to_s.downcase
     value_array = value.split(" ")
-    value_array = value_array << value if value_array.length > 1 # we add the whole value to the index as well as the split value (so you can search e.g. a full name as well as name component)
+    # we add the whole value to the index as well as the split value (so you can search e.g. a full name as well as name component)
+    value_array = value_array << value if value_array.length > 1
     value_array.map do |value_component|
       # Initialize hash keys if needed
       @inverted_index[entity_name] ||= {}
