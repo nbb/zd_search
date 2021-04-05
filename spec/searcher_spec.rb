@@ -41,5 +41,7 @@ describe Searcher do
       searcher = Searcher.new(search_index, data, "users", "name", "FrAnCiScA RaSmUsSeN")
       expect(searcher.call).to eq([{"name"=>"Francisca Rasmussen", "timezone" => "Sri Lanka"}])
     end
+
+    xit "doesn't break if you search for a non-existant field"
   end
 end
