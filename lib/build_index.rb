@@ -31,9 +31,9 @@ class BuildIndex
     return @inverted_index
   end
 
-  def add_value_to_index(field_index, entity_name, field, value)
+  def add_value_to_index(record_index, entity_name, field, value)
     if value.is_a?(Array)
-      value.map { |sub_value| add_value_to_index(field_index, entity_name, field, sub_value) }
+      value.map { |sub_value| add_value_to_index(record_index, entity_name, field, sub_value) }
     end
     value = value.to_s.downcase # convert integers and booleans to strings at this point, and downcase
     value_array = value.split(" ")
@@ -44,7 +44,7 @@ class BuildIndex
       @inverted_index[entity_name][field] ||= {}
       @inverted_index[entity_name][field][value_component] ||= []
       # Add our search index location into the right bit of the index hash
-      @inverted_index[entity_name][field][value_component] << field_index
+      @inverted_index[entity_name][field][value_component] << record_index
     end
   end
 end
