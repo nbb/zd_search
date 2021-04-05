@@ -33,20 +33,22 @@ class BuildIndex
 
   def add_value_to_index(record_index, entity_name, field, value)
     if value.is_a?(Array)
+      # Recurse over array values
       value.map { |sub_value| add_value_to_index(record_index, entity_name, field, sub_value) }
-    end
-    # convert integers and booleans to strings at this point, and downcase
-    value = value.to_s.downcase
-    value_array = value.split(" ")
-    # we add the whole value to the index as well as the split value (so you can search e.g. a full name as well as name component)
-    value_array = value_array << value if value_array.length > 1
-    value_array.map do |value_component|
-      # Initialize hash keys if needed
-      @inverted_index[entity_name] ||= {}
-      @inverted_index[entity_name][field] ||= {}
-      @inverted_index[entity_name][field][value_component] ||= []
-      # Add our search index location into the right bit of the index hash
-      @inverted_index[entity_name][field][value_component] << record_index
+    else
+      # convert integers and booleans to strings, and downcase
+      value = value.to_s.downcase
+      value_array = value.split(" ")
+      # we add the whole value to the index as well as the split value (so you can search e.g. a full name as well as name component)
+      value_array = value_array << value if value_array.length > 1
+      value_array.map do |value_component|
+        # Initialize hash keys if needed
+        @inverted_index[entity_name] ||= {}
+        @inverted_index[entity_name][field] ||= {}
+        @inverted_index[entity_name][field][value_component] ||= []
+        # Add our search index location into the right bit of the index hash
+        @inverted_index[entity_name][field][value_component] << record_index
+      end
     end
   end
 end
