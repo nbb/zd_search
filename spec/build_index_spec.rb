@@ -12,7 +12,7 @@ describe BuildIndex do
   }
 
   describe ".call" do
-    it "correctly indexes a given data hash" do
+    it "correctly indexes a given data hash that includes strings, booleans and arrays" do
       build_index = BuildIndex.new(data)
       expect(build_index.call).to eq(
         "users" => {
