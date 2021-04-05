@@ -1,4 +1,4 @@
-# Builds an inverted index, which will have a structure something like this:
+# Builds an inverted index, outputting a structure like this:
 # search_index = {
 #   users: {
 #     {
@@ -15,26 +15,13 @@
 class BuildIndex
   def initialize(data)
     @data = data
-    # Can we initialise the inverted index using the data hash above instead?
-    @inverted_index = {
-      "users" => {
-        "_id" => {}, "url" => {}, "external_id" => {}, "name" => {}, "alias" => {}, "created_at" => {}, "active" => {}, "verified" => {}, "shared" => {}, "locale" => {}, "timezone" => {}, "last_login_at" => {}, "email" => {}, "phone" => {}, "signature" => {}, "organization_id" => {}, "tags" => {}, "suspended" => {}, "role" => {}
-      },
-      "tickets" => {
-        "_id" => {}, "url" => {}, "external_id" => {}, "created_at" => {}, "type" => {}, "subject" => {}, "description" => {}, "priority" => {}, "status" => {}, "submitter_id" => {}, "assignee_id" => {}, "organization_id" => {}, "tags" => {}, "has_incidents" => {}, "due_at" => {}, "via" => {}
-      },
-      "organizations" => {
-        "_id" => {}, "url" => {}, "external_id" => {}, "name" => {}, "domain_names" => {}, "created_at" => {}, "details" => {}, "shared_tickets" => {}, "tags" => {}
-      }
-    }
+    @inverted_index = {}
   end
 
   def call
-    # Build out our inverted index here
-    # TODO: I think this needs to be recursive and follow the structure of the data input
     @data.each do |entity_name, records|
       records.each_with_index do |record, record_index|
-        @inverted_index[entity_name].keys.each do |field|
+        record.keys.each do |field|
           value = record[field]
           add_value_to_index(record_index, entity_name, field, value)
         end
@@ -52,7 +39,11 @@ class BuildIndex
     value_array = value.split(" ")
     value_array = value_array << value if value_array.length > 1 # we add the whole value to the index as well as the split value (so you can search e.g. a full name as well as name component)
     value_array.map do |value_component|
+      # Initialize hash keys if needed
+      @inverted_index[entity_name] ||= {}
+      @inverted_index[entity_name][field] ||= {}
       @inverted_index[entity_name][field][value_component] ||= []
+      # Add our search index location into the right bit of the index hash
       @inverted_index[entity_name][field][value_component] << field_index
     end
   end
