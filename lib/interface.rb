@@ -41,7 +41,8 @@ class Interface
       puts "\nEnter your search term:\n"
       @search_term = get_input(blank_allowed: true)
       searcher = Searcher.new(@search_index, @data, @entity, @field, @search_term)
-      searcher.call
+      search_results = searcher.call
+      display_search_results(search_results)
       input_loop
     end
   end
@@ -62,6 +63,14 @@ class Interface
     @data.keys.each do |entity_name|
       puts "\n#{entity_name.capitalize}:"
       puts "\n  #{@data[entity_name].first.keys.join(", ")}"
+    end
+  end
+
+  def display_search_results(search_results)
+    search_results.each do |result|
+      result.each do |key, value|
+        puts key.ljust(30) + value.to_s
+      end
     end
   end
 
