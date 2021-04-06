@@ -58,6 +58,18 @@ class Searcher
         record["organization"] = @data["organizations"][organization_record_location]["name"]
         record.delete("organization_id")
       end
+    elsif @entity == "organizations"
+      # Find related tickets
+      tickets = find_record_locations(@search_index, "tickets", "organization_id", record["_id"].to_s)
+      tickets.each_with_index do |id, i|
+        record["ticket_#{i}"] = @data["tickets"][id]["subject"]
+      end
+
+      # Find related users
+      user_record_locations = find_record_locations(@search_index, "users", "organization_id", record["_id"].to_s)
+      user_record_locations.each_with_index do |user_index, i|
+        record["user_#{i}"] = @data["users"][user_index]["name"]
+      end
     end
     record
   end
