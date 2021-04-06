@@ -43,6 +43,9 @@ class Interface
       searcher = Searcher.new(@search_index, @data, @entity, @field, @search_term)
       search_results = searcher.call
       display_search_results(search_results)
+
+      # Clear user set values and start again
+      @entity, @field, @search_term = nil
       input_loop
     end
   end
