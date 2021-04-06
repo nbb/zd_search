@@ -67,6 +67,7 @@ class Interface
   end
 
   def display_search_results(search_results)
+    puts "\n No result found" if search_results.empty?
     search_results.each do |result|
       result.each do |key, value|
         puts key.ljust(30) + value.to_s
