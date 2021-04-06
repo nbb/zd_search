@@ -55,7 +55,7 @@ class Searcher
       # Find related organization name
       organization_record_location = find_record_locations(@search_index, "organizations", "_id", record["organization_id"].to_s)[0]
       if organization_record_location
-        record["assignee"] = @data["organizations"][organization_record_location]["name"]
+        record["organization"] = @data["organizations"][organization_record_location]["name"]
         record.delete("organization_id")
       end
     end
