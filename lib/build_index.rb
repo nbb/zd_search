@@ -38,7 +38,14 @@ class BuildIndex
     else
       # convert integers and booleans to strings, and downcase
       value = value.to_s.downcase
-      value_array = value.split(" ")
+
+      # Split value into seperate words
+      if value.include? " "
+        value_array = value.split(" ")
+      else
+        value_array = [value]
+      end
+
       # we add the whole value to the index as well as the split value (so you can search e.g. a full name as well as name component)
       value_array = value_array << value if value_array.length > 1
       value_array.map do |value_component|
