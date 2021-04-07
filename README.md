@@ -26,7 +26,7 @@ Zendesk Search will index three JSON files when executed, allowing them to then 
 Once you have Ruby installed, run the application with the following command:
 
 ```
-ruby ./zendesk_search.rb
+ruby zendesk_search.rb
 ```
 
 Follow the on screen instructions and type `\help` at anytime to see a list of commands
