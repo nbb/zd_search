@@ -19,8 +19,16 @@ json_files = [
 
 data = {}
 json_files.each do |json_file|
+  raise "The #{json_file[:relative_path]} file is missing" if !File.exist?(json_file[:relative_path])
   file = File.read(json_file[:relative_path])
-  data[json_file[:entity_name]] = JSON.parse(file)
+  begin
+    data[json_file[:entity_name]] = JSON.parse(file)
+  rescue JSON::ParserError => e
+    puts "\nThere was a problem parsing the #{json_file[:relative_path]} file. Please check it's valid. \n\n"
+    puts e.message
+    puts e.backtrace
+    exit
+  end
 end
 
 build_index = BuildIndex.new(data)
