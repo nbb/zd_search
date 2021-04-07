@@ -1,4 +1,5 @@
 require "searcher"
+require "build_index"
 
 describe Searcher do
   let(:data) {
@@ -8,7 +9,7 @@ describe Searcher do
         {"_id" => 2, "name" => "Cross Barlow", "timezone" => "Sri Lanka", "tags" => ["Gallina", "Glenshaw"]},
         {"_id" => 3, "name" => "Ingrid Wagner", "timezone" => "Trinidad and Tobago"},
         {"_id" => 4, "name" => "Rose Newton", "timezone" => "Netherlands"},
-        {"_id" => 5, "name" => "Loraine Pittman", "timezone" => "Monaco", "organization_id" => 2}
+        {"_id" => 5, "name" => "Loraine Pittman", "timezone" => "", "organization_id" => 2}
       ],
       "organizations" => [
         { "_id" => 1, "name" => "Enthaze" },
@@ -27,12 +28,17 @@ describe Searcher do
 
   # NOTE: If you update the data variable above, you'll need an corresponding updated index. To do this `require "build_index"`
   # and run the following code from an example: `puts BuildIndex.new(data).call.to_s`
-  let(:search_index) { {"users"=>{"_id"=>{"1"=>[0], "2"=>[1], "3"=>[2], "4"=>[3], "5"=>[4]}, "name"=>{"francisca"=>[0], "rasmussen"=>[0], "francisca rasmussen"=>[0], "cross"=>[1], "barlow"=>[1], "cross barlow"=>[1], "ingrid"=>[2], "wagner"=>[2], "ingrid wagner"=>[2], "rose"=>[3], "newton"=>[3], "rose newton"=>[3], "loraine"=>[4], "pittman"=>[4], "loraine pittman"=>[4]}, "timezone"=>{"sri"=>[0, 1], "lanka"=>[0, 1], "sri lanka"=>[0, 1], "trinidad"=>[2], "and"=>[2], "tobago"=>[2], "trinidad and tobago"=>[2], "netherlands"=>[3], "monaco"=>[4]}, "tags"=>{"gallina"=>[1], "glenshaw"=>[1]}, "organization_id"=>{"2"=>[4]}}, "organizations"=>{"_id"=>{"1"=>[0], "2"=>[1]}, "name"=>{"enthaze"=>[0], "nutralab"=>[1]}}, "tickets"=>{"subject"=>{"a"=>[0], "catastrophe"=>[0], "in"=>[0], "korea"=>[0], "(north)"=>[0], "a catastrophe in korea (north)"=>[0]}, "submitter_id"=>{"3"=>[0]}, "assignee_id"=>{"4"=>[0]}, "organization_id"=>{"1"=>[0]}}} }
+  let(:search_index) { {"users"=>{"_id"=>{"1"=>[0], "2"=>[1], "3"=>[2], "4"=>[3], "5"=>[4]}, "name"=>{"francisca"=>[0], "rasmussen"=>[0], "francisca rasmussen"=>[0], "cross"=>[1], "barlow"=>[1], "cross barlow"=>[1], "ingrid"=>[2], "wagner"=>[2], "ingrid wagner"=>[2], "rose"=>[3], "newton"=>[3], "rose newton"=>[3], "loraine"=>[4], "pittman"=>[4], "loraine pittman"=>[4]}, "timezone"=>{"sri"=>[0, 1], "lanka"=>[0, 1], "sri lanka"=>[0, 1], "trinidad"=>[2], "and"=>[2], "tobago"=>[2], "trinidad and tobago"=>[2], "netherlands"=>[3], ""=>[4]}, "tags"=>{"gallina"=>[1], "glenshaw"=>[1]}, "organization_id"=>{"2"=>[4]}}, "organizations"=>{"_id"=>{"1"=>[0], "2"=>[1]}, "name"=>{"enthaze"=>[0], "nutralab"=>[1]}}, "tickets"=>{"subject"=>{"a"=>[0], "catastrophe"=>[0], "in"=>[0], "korea"=>[0], "(north)"=>[0], "a catastrophe in korea (north)"=>[0]}, "submitter_id"=>{"3"=>[0]}, "assignee_id"=>{"4"=>[0]}, "organization_id"=>{"1"=>[0]}}} }
 
   describe ".call" do
     it "finds a matching record for a given search" do
       searcher = Searcher.new(search_index, data, "users", "name", "Francisca Rasmussen")
       expect(searcher.call).to eq([{"_id"=>1, "name"=>"Francisca Rasmussen", "timezone" => "Sri Lanka"}])
+    end
+
+    it "finds a matching record when searching for a field that is blank" do
+      searcher = Searcher.new(search_index, data, "users", "timezone", "")
+      expect(searcher.call).to eq([{"_id"=>5, "name"=>"Loraine Pittman", "organization"=>"Nutralab", "timezone"=>""}])
     end
 
     it "finds a matching record when the field contains the query as a word" do
@@ -80,7 +86,7 @@ describe Searcher do
 
     it "it returns related organization data when searching users" do
       searcher = Searcher.new(search_index, data, "users", "name", "Pittman")
-      expect(searcher.call).to eq([{"_id"=>5, "name"=>"Loraine Pittman", "organization"=>"Nutralab", "timezone"=>"Monaco"}])
+      expect(searcher.call).to eq([{"_id"=>5, "name"=>"Loraine Pittman", "organization"=>"Nutralab", "timezone"=>""}])
     end
 
     it "it returns related ticket data when searching organizations" do
