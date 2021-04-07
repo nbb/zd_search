@@ -1,5 +1,8 @@
 source "https://rubygems.org"
 
 gem "json"
-gem "byebug"
-gem "rspec"
+
+group :test, :development do
+  gem "byebug"
+  gem "rspec"
+end
