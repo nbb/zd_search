@@ -1,0 +1,13 @@
+This has been a very enjoyable project to work on. I haven't coded a lot in the past 12 months, so it felt like a great way for me to get my head back into Ruby and problem solving.
+
+One enjoyable part of this was trying to make a command line interface as usable and understandable as possible. This was a problem I hadn't really had to think about previously, having mostly coded command line apps meant for personal use, which would generally just take command line arguments.  When I have time I'd like to look at the code of other Ruby command line apps that works in the way this one does (looping and reacting to input).
+
+I also enjoyed researching the problem of making a search that performed well for many data items. This was something that I'd always relied on 3rd party tools for (SQL databases, Elasticsearch), so I feel I've now got a stronger understanding of how these tools index data. For this application I looked into inverted indexes, and decided that that seemed to be a simple way of taking the provided JSON data and making it searchable in Ruby with performance in mind. This seems to work quite well, but the code I wrote in the `BuildIndex` class currently assumes a certain structure (data separated into entities, with each entity containing an array of records), and I think it'd be better to refactor `BuildIndex` so that it recursively indexed any array of records (including records with deeper nested content). With something like that, you'd pass the `users`, `organizations` and `tickets` separately, rather that in the same hash.
+
+With the above in mind, one important thing that I haven't done for this project is benchmarking. I've made a pretty big assumption that this application performs well for large datasets. I think that's probably true — based on my understanding of hashes in Ruby — but if I was shipping this app, I'd be making sure of that. I don't have heaps of experience with benchmarking, only having done it a handful of times, but I know that the Benchmark module is build into Ruby, and I could write code that created large JSON files and used `Benchmark` to test the loading, indexing and searching of that data.
+
+I have written specs for the BuildIndex class and the Searcher class. According to Simplecov this has given 100% test coverage for these classes, but I haven't written specs for the main `ZendeskSearch` class which is responsible for parsing the given JSON data files — this would be good to do. I also haven't written integration specs for the `Interface` class, which would also be a good thing to do. I've had a quick look for how one would do this and it appears that it wouldn't be too hard to write specs that drove a command line app.
+
+Thanks for the opportunity to work on this.
+
+Nick

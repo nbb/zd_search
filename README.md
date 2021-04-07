@@ -1,6 +1,6 @@
 # Zendesk Search
 
-See `discussion.md` for discussion of assumptions and tradeoffs.
+Please see `discussion.md` for a discussion of my approach to this project.
 
 ## Description
 
