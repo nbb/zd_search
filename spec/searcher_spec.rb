@@ -7,10 +7,12 @@ describe Searcher do
         {"_id" => 1, "name" => "Francisca Rasmussen", "timezone" => "Sri Lanka"},
         {"_id" => 2, "name" => "Cross Barlow", "timezone" => "Sri Lanka", "tags" => ["Gallina", "Glenshaw"]},
         {"_id" => 3, "name" => "Ingrid Wagner", "timezone" => "Trinidad and Tobago"},
-        {"_id" => 4, "name" => "Rose Newton", "timezone" => "Netherlands"}
+        {"_id" => 4, "name" => "Rose Newton", "timezone" => "Netherlands"},
+        {"_id" => 5, "name" => "Loraine Pittman", "timezone" => "Monaco", "organization_id" => 2}
       ],
       "organizations" => [
-        { "_id" => 1, "name" => "Enthaze", }
+        { "_id" => 1, "name" => "Enthaze" },
+        { "_id" => 2, "name" => "Nutralab" }
       ],
       "tickets" => [
         {
@@ -23,9 +25,9 @@ describe Searcher do
     }
   }
 
-  # !! If you update the data variable above, you'll need an corresponding updated index. To do this `require "build_index"`
+  # NOTE: If you update the data variable above, you'll need an corresponding updated index. To do this `require "build_index"`
   # and run the following code from an example: `puts BuildIndex.new(data).call.to_s`
-  let(:search_index) { {"users"=>{"_id"=>{"1"=>[0], "2"=>[1], "3"=>[2], "4"=>[3]}, "name"=>{"francisca"=>[0], "rasmussen"=>[0], "francisca rasmussen"=>[0], "cross"=>[1], "barlow"=>[1], "cross barlow"=>[1], "ingrid"=>[2], "wagner"=>[2], "ingrid wagner"=>[2], "rose"=>[3], "newton"=>[3], "rose newton"=>[3]}, "timezone"=>{"sri"=>[0, 1], "lanka"=>[0, 1], "sri lanka"=>[0, 1], "trinidad"=>[2], "and"=>[2], "tobago"=>[2], "trinidad and tobago"=>[2], "netherlands"=>[3]}, "tags"=>{"gallina"=>[1], "glenshaw"=>[1]}}, "organizations"=>{"_id"=>{"1"=>[0]}, "name"=>{"enthaze"=>[0]}}, "tickets"=>{"subject"=>{"a"=>[0], "catastrophe"=>[0], "in"=>[0], "korea"=>[0], "(north)"=>[0], "a catastrophe in korea (north)"=>[0]}, "submitter_id"=>{"3"=>[0]}, "assignee_id"=>{"4"=>[0]}, "organization_id"=>{"1"=>[0]}}} }
+  let(:search_index) { {"users"=>{"_id"=>{"1"=>[0], "2"=>[1], "3"=>[2], "4"=>[3], "5"=>[4]}, "name"=>{"francisca"=>[0], "rasmussen"=>[0], "francisca rasmussen"=>[0], "cross"=>[1], "barlow"=>[1], "cross barlow"=>[1], "ingrid"=>[2], "wagner"=>[2], "ingrid wagner"=>[2], "rose"=>[3], "newton"=>[3], "rose newton"=>[3], "loraine"=>[4], "pittman"=>[4], "loraine pittman"=>[4]}, "timezone"=>{"sri"=>[0, 1], "lanka"=>[0, 1], "sri lanka"=>[0, 1], "trinidad"=>[2], "and"=>[2], "tobago"=>[2], "trinidad and tobago"=>[2], "netherlands"=>[3], "monaco"=>[4]}, "tags"=>{"gallina"=>[1], "glenshaw"=>[1]}, "organization_id"=>{"2"=>[4]}}, "organizations"=>{"_id"=>{"1"=>[0], "2"=>[1]}, "name"=>{"enthaze"=>[0], "nutralab"=>[1]}}, "tickets"=>{"subject"=>{"a"=>[0], "catastrophe"=>[0], "in"=>[0], "korea"=>[0], "(north)"=>[0], "a catastrophe in korea (north)"=>[0]}, "submitter_id"=>{"3"=>[0]}, "assignee_id"=>{"4"=>[0]}, "organization_id"=>{"1"=>[0]}}} }
 
   describe ".call" do
     it "finds a matching record for a given search" do
@@ -76,9 +78,19 @@ describe Searcher do
       expect(searcher.call).to eq([{"_id"=>3, "name"=>"Ingrid Wagner", "ticket_0"=>"A Catastrophe in Korea (North)", "timezone"=>"Trinidad and Tobago"}])
     end
 
+    it "it returns related organization data when searching users" do
+      searcher = Searcher.new(search_index, data, "users", "name", "Pittman")
+      expect(searcher.call).to eq([{"_id"=>5, "name"=>"Loraine Pittman", "organization"=>"Nutralab", "timezone"=>"Monaco"}])
+    end
+
     it "it returns related ticket data when searching organizations" do
       searcher = Searcher.new(search_index, data, "organizations", "name", "Enthaze")
       expect(searcher.call).to eq([{"_id"=>1, "name"=>"Enthaze", "ticket_0"=>"A Catastrophe in Korea (North)"}])
+    end
+
+    it "it returns related user data when searching organizations" do
+      searcher = Searcher.new(search_index, data, "organizations", "name", "Nutralab")
+      expect(searcher.call).to eq([{"_id"=>2, "name"=>"Nutralab", "user_0"=>"Loraine Pittman"}])
     end
 
     it "it returns related fields when searching tickets" do
