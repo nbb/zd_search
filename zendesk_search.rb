@@ -1,4 +1,3 @@
-require "byebug"
 require "json"
 require_relative "lib/build_index"
 require_relative "lib/interface"

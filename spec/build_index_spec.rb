@@ -1,5 +1,4 @@
 require "build_index"
-require "byebug"
 
 describe BuildIndex do
   let(:data) {

@@ -1,5 +1,4 @@
 require "searcher"
-require "byebug"
 
 describe Searcher do
   let(:data) {
