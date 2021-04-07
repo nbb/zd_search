@@ -36,17 +36,17 @@ class BuildIndex
       # Recurse over array values
       value.map { |sub_value| add_value_to_index(record_index, entity_name, field, sub_value) }
     else
-      # convert integers and booleans to strings, and downcase
+      # Convert integers and booleans to strings, and downcase
       value = value.to_s.downcase
 
-      # Split value into seperate words
+      # Split value into separate words
       if value.include? " "
         value_array = value.split(" ")
       else
         value_array = [value]
       end
 
-      # we add the whole value to the index as well as the split value (so you can search e.g. a full name as well as name component)
+      # We add the whole value to the index as well as the split value (so you can search e.g. a full name as well as name component)
       value_array = value_array << value if value_array.length > 1
       value_array.map do |value_component|
         # Initialize hash keys if needed
